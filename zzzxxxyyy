@@ -1,0 +1,22 @@
+// Update food item
+exports.updateFood = async (req, res) => {
+  try {
+    const { name, price } = req.body;
+    const food = await Food.findById(req.params.id);
+
+    // Update fields
+    food.name = name;
+    food.price = price;
+
+    // Check if a new image file is uploaded and replace the old one
+    if (req.file) {
+      if (food.image) fs.unlinkSync(path.join(__dirname, '..', food.image));  // Delete old image
+      food.image = `/uploads/${req.file.filename}`;  // Set new image path
+    }
+
+    await food.save();
+    res.redirect('/product');
+  } catch (error) {
+    res.status(500).send('Failed to update food item');
+  }
+};

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+</head>
+<body>
+    <h1>Product Management</h1>
+    <a href="/addFood">Add New Food Item</a>
+    <div class="food-list">
+        <% foods.forEach(food => { %>
+            <div class="food-item">
+                <img src="<%= food.image %>" alt="<%= food.name %>" style="width:100px;height:100px;">
+                <h2><%= food.name %></h2>
+                <p>Price: $<%= food.price %></p>
+                <a href="/editFood/<%= food._id %>">Edit</a>
+                <form action="/deleteFood/<%= food._id %>" method="POST">
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+
+    <!-- Links -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
+
+    <style>
+        body {
+            padding: 20px;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        .table img {
+            border-radius: 5px;
+            width: 50px;
+        }
+        .form-inline {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .add-item-form {
+            margin-top: 30px;
+        }
+        .add-item-form h4 {
+            margin-bottom: 20px;
+        }
+        .food-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .food-item img {
+            margin-right: 15px;
+        }
+
+        .form-control:focus {
+    /*border-color: #1e90ff; pwedi mo namn lagyan ng kulay yung border*/ 
+    background-color: #fff; /* Ensures the background is white on focus */
+    box-shadow: none; /* Removes the default box-shadow on focus */
+    border-color: #ced4da;
+    outline: none;
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge, Opera) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Standard syntax (for browsers that support it) */
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Add Food Form -->
+        <div class="add-item-form">
+           
+            <form action="/table" method="POST" enctype="multipart/form-data" class="p-3 border rounded shadow" >
+                <h4 style="margin-top: 20px;">FOOD MANAGEMENT</h4>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" name="name" class="form-control" autocomplete="off" required>
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" name="price" class="form-control" autocomplete="off" required>
+                </div>
+                <div class="mb-3">
+                    <label for="file" class="form-label">Image</label>
+                    <input type="file" name="upload_image" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Add Food Item</button>
+            </form>
+        </div>
+    </div>
+
+   <!-- If success is true in the query, show the SweetAlert success popup -->
+  <% if (success === 'true') { %>
+    <script>
+      swal("Success!", "Food item added successfully.", "success")
+      .then((value) => {
+      // Redirect to product.ejs after clicking the "OK" button
+      window.location.href = '/product';  // Adjust the URL based on your route
+    });
+                // Custom CSS for SweetAlert width and height
+                const swalContainer = document.querySelector('.swal-modal');
+                if (swalContainer) {
+                    swalContainer.style.width = '302px';
+                    swalContainer.style.height = '402px';
+                };
+                // Add margin-top to the SweetAlert icon
+                const swalIcon = document.querySelector('.swal-icon');
+                if (swalIcon) {
+                    swalIcon.style.marginTop = '50px'; // Adjust margin-top to 20px (or as needed)
+                }
+    
+                // Add margin-top to the text ("Food Updating Successfully")
+                const swalText = document.querySelector('.swal-text');
+                if (swalText) {
+                    swalText.style.marginTop = '20px'; // Adjust the margin-top to your preference
+                }
+
+                // Add margin to the SweetAlert buttons
+                const swalButtons = document.querySelectorAll('.swal-button');
+                swalButtons.forEach(btn => {
+                    btn.style.margin = '10px';  // Add desired margin here (10px example)
+                    btn.style.borderRadius = '32px'; // Add border-radius (rounded corners) to the button
+                    btn.style.paddingLeft = '40px';  // Add padding-left of 20px
+                    btn.style.paddingRight = '40px'; // Add padding-right of 20px
+                    btn.style.paddingTop = '7px'; // Add padding-right of 20px
+                    btn.style.paddingBottom = '7px'; // Add padding-right of 20px
+                    btn.style.backgroundColor = '#2dd284'; // Set background color (green)
+                    btn.style.color = 'white';  // Set text color (white)
+                    btn.style.border = 'none';  // Remove default border if needed
+
+                    // Remove box-shadow and active border
+                    btn.style.boxShadow = 'none';  // Remove box-shadow (no shadow effect)
+                    btn.style.outline = 'none';  // Remove outline (active border when clicked)
+                });
+    
+                // Center the SweetAlert button
+                const swalButtonContainer = document.querySelector('.swal-button-container');
+                if (swalButtonContainer) {
+                    swalButtonContainer.style.display = 'flex';
+                    swalButtonContainer.style.justifyContent = 'center'; // Centers button horizontally
+                    swalButtonContainer.style.alignItems = 'center';   // Centers button vertically (if needed)
+                }
+    </script>
+  <% } %>
+
+
+
+<!-- Food List -->
+ <!-- Food List -->
+ <div class="container my-5" >
+    <table  id="orderTable" class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Image</th>
+                <th>Update Content</th>
+                <th style="width: 179px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% foods.forEach(food => { %>
+                <tr>
+                    <td><img src="<%= food.image %>" class="img-thumbnail" alt="<%= food.name %>" style="width:60px;height:60px;"></td>
+                    <td>
+                        <form action="/editFood/<%= food._id %>" method="POST" enctype="multipart/form-data" class="form-inline" id="updateForm-<%= food._id %>">
+                            <input type="text" class="form-control form-control-sm" name="name" value="<%= food.name %>" required spellcheck="false" autocomplete="off">
+                            <span style="display: none;"><%= food.name %></span>
+                            <input type="number" class="form-control form-control-sm" name="price" value="<%= food.price %>" required autocomplete="off">
+                            <span style="display: none;"><%= food.price %></span>
+                            <input type="file" class="form-control form-control-sm" name="upload_image">
+                        </form>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <form action="/updateFood/<%= food._id %>" method="POST" class="me-2" onclick="handleUpdate('<%= food._id %>')">
+                                <button type="button" class="btn btn-orange text-dark btn-sm" style="background: orange; border-radius: 4px;" onclick="handleUpdate('<%= food._id %>')" onclick="document.getElementById('updateForm-<%= food._id %>').submit();">
+                                    <i class="fa fa-check"></i> Update
+                                </button>
+                            </form>
+                            <form action="/deleteFood/<%= food._id %>" method="POST">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+   
+    <script src="/js/sweetAlert.js" defer></script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    
+   <!-- jQuery, Bootstrap JS, and DataTables scripts -->
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>-->
+   <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#orderTable').DataTable({
+            responsive: true,
+            pageLength: 5,
+            language: {
+                search: "Search:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+            },
+        });
+    });
+</script>
+
+<script>
+    function handleUpdate(foodId) {
+        // Show SweetAlert with success message
+        swal({
+            title: "Success!",
+            text: "Food update successfully.",
+            icon: "success",
+            button: "OK",  // Custom button text
+           
+        }).then(() => {
+            // Once SweetAlert disappears, submit the form
+            document.getElementById('updateForm-' + foodId).submit();
+        });
+
+        // Custom CSS for SweetAlert width and height
+        const swalContainer = document.querySelector('.swal-modal');
+                if (swalContainer) {
+                    swalContainer.style.width = '302px';
+                    swalContainer.style.height = '402px';
+                };
+                // Add margin-top to the SweetAlert icon
+                const swalIcon = document.querySelector('.swal-icon');
+                if (swalIcon) {
+                    swalIcon.style.marginTop = '50px'; // Adjust margin-top to 20px (or as needed)
+                }
+    
+                // Add margin-top to the text ("Food Updating Successfully")
+                const swalText = document.querySelector('.swal-text');
+                if (swalText) {
+                    swalText.style.marginTop = '20px'; // Adjust the margin-top to your preference
+                }
+
+                // Add margin to the SweetAlert buttons
+                const swalButtons = document.querySelectorAll('.swal-button');
+                swalButtons.forEach(btn => {
+                    btn.style.margin = '10px';  // Add desired margin here (10px example)
+                    btn.style.borderRadius = '32px'; // Add border-radius (rounded corners) to the button
+                    btn.style.paddingLeft = '40px';  // Add padding-left of 20px
+                    btn.style.paddingRight = '40px'; // Add padding-right of 20px
+                    btn.style.paddingTop = '7px'; // Add padding-right of 20px
+                    btn.style.paddingBottom = '7px'; // Add padding-right of 20px
+                    btn.style.backgroundColor = '#2dd284'; // Set background color (green)
+                    btn.style.color = 'white';  // Set text color (white)
+                    btn.style.border = 'none';  // Remove default border if needed
+
+                    // Remove box-shadow and active border
+                    btn.style.boxShadow = 'none';  // Remove box-shadow (no shadow effect)
+                    btn.style.outline = 'none';  // Remove outline (active border when clicked)
+                });
+    
+                // Center the SweetAlert button
+                const swalButtonContainer = document.querySelector('.swal-button-container');
+                if (swalButtonContainer) {
+                    swalButtonContainer.style.display = 'flex';
+                    swalButtonContainer.style.justifyContent = 'center'; // Centers button horizontally
+                    swalButtonContainer.style.alignItems = 'center';   // Centers button vertically (if needed)
+                }
+    }
+</script>
+    
+</body>
+</html>
+
+
+
+
+
+
+
+

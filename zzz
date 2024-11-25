@@ -1,0 +1,108 @@
+//controllers>controller.js exports.loginPage = (req, res) => {
+    res.render('login', { error: null });  // Pass 'error' variable to the view
+  };
+  
+  exports.loginPost = (req, res) => {
+    const { email, password } = req.body;
+  
+    // Hardcoded admin credentials
+    const adminEmail = 'admin@admin';
+    const adminPassword = 'admin';
+  
+    // Check if credentials match
+    if (email === adminEmail && password === adminPassword) {
+      req.session.isAdmin = true; // Store session data
+      res.redirect('/adminDashboard');
+    } else {
+      // If login fails, pass the error message
+      res.render('login', { error: 'Invalid email or password' });
+    }
+  };
+  
+  exports.adminDashboard = (req, res) => {
+    if (req.session.isAdmin) {
+      res.render('adminDashboard');
+    } else {
+      res.redirect('/login');
+    }
+  };
+  
+  exports.logout = (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).send('Unable to logout');
+      }
+      res.redirect('/login');
+    });
+  };
+  //routes>routes.js const express = require('express');
+const router = express.Router();
+const authController = require('../controllers/controller');
+const isAuthenticated = require('../middleware/middleware'); // Import the middleware
+
+// Show login page (public route)
+router.get('/login', authController.loginPage);
+
+// Handle login form submission (public route)
+router.post('/login', authController.loginPost);
+
+// Show admin dashboard (protected route)
+router.get('/adminDashboard', isAuthenticated, authController.adminDashboard);
+
+// Show menu page (protected route)
+router.get('/menu', isAuthenticated, (req, res) => {
+    res.render('menu');  
+});
+
+// Show editFOOD page (protected route)
+router.get('/editFood', isAuthenticated, (req, res) => {
+    res.render('editFood');  
+});
+
+// Show products page (protected route)
+router.get('/product', isAuthenticated, (req, res) => {
+    res.render('product');  
+});
+
+// Logout user (public route)
+router.get('/logout', authController.logout);
+
+module.exports = router;
+//views>product.ejs <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    
+</head>
+<bod>
+    <!-- Food Form -->
+    <div class="col-lg-12 col-md-12 col-sm-12 col-12 mx-auto mb-0">
+        <div class="card shadow-card" style="padding: 30px; border-radius: 3px;">
+            <form action="/table" method="POST" enctype="multipart/form-data" >
+                <h4>ADD ITEMS</h4>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" class="form-control" name="price" required>
+                </div>
+                <div class="form-group mb-2">
+                    <label for="file">Image</label>
+                    <input type="file" class="form-control" name="upload_image" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-sm">Add Food Item</button>
+            </form>
+        </div>
+    </div>
+    <h1>Product</h1>
+<a href="/adminDashboard">Back to Dashboard</a>
+<a href="/menu">Back to product</a>
+<a href="/editFood">Back to FOOD</a>
+<p><a href="/logout">Logout</a></p>
+</body>
+</html>

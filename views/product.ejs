@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Chow</title>
+    <!-- Links -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
+</head>
+
+<style>
+    /* Scrollbar */
+* {
+scrollbar-width: thin;
+scrollbar-color: #888 #f5f5f5;
+scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar { /* Scrollbar for widths for Chrome, Safari, Edge [firefox] */
+width: 1px;
+}
+
+::-webkit-scrollbar-track {
+background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+background-color: #888;
+border-radius: 50%;
+border: 2px solid #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background-color: #555;
+}
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        overflow-x: hidden;
+    }
+
+    .main {
+        display: grid;
+        grid-template-areas:
+            "header header"
+            "sidebar content"
+            "footer footer";
+        grid-template-columns: 250px 1fr;
+        grid-template-rows: auto 1fr auto;
+        min-height: 100vh;
+        gap: 10px;
+    }
+
+/* Sidebar *************************************************************************************************************************8**/
+    /* Sidebar */
+    .sidebar {
+        grid-area: sidebar;
+        background-color: white; /*white*/
+        padding: 15px;
+        margin-top: 15px;
+        margin-left: 15px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        height: 96%;
+        overflow-y: auto;
+        position: fixed;
+        width: 250px;
+        transition: transform 0.3s ease-in-out; /* slide transition of sidebar */
+        z-index: 1000; /* Add this to ensure it's in front of other content */
+    }
+
+    .sidebar a {
+        display: block;
+        color: #333;
+        padding: 10px 15px;
+        padding-left: 55px;
+        text-decoration: none;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        transition: all 0.5s ease; 
+        z-index: 1;
+    }
+
+    .sidebar a:hover {
+        background-color: #495057;
+        color: white;
+        transition: all 0.5s ease; 
+    }
+
+    .sidebar a.active {
+        background-color: #428eff;
+        color: white;
+    }
+
+    a i {
+        margin-right: 8px;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+         /*background-color: rgba(24, 23, 23, 0.1); /* Semi-transparent background */
+        /*backdrop-filter: blur(2px); /* Blur effect for background content */
+        display: none; /* Hidden by default */
+        z-index: 999; /* Ensure it's above other elements */
+    }
+
+/*main*****************************************************************************************************************************/
+    /* Content */
+    .content {
+        grid-area: content;
+        padding: 38px;
+    }
+
+    
+/*Navbar**********************************************************************************************************************************/
+    .navbar {
+        background-color: #f0f2f5; /* Light background color */
+        padding-bottom: 20px;
+    }
+
+    .breadcrumb {
+        background: transparent;
+        padding-left: 0;
+        text-decoration: none;
+    }
+
+    .form-control-sm {
+        width: 200px;
+    }
+
+    .me-3 {
+        margin-right: 1rem;
+    }
+
+    .navbar .fas {
+        font-size: 20px; /*1.2rem */
+        color: #6c757d;
+    }
+
+    .navbar .fa-bars {
+        font-size: 20px;
+        color: #6c757d;
+    }
+
+    .navbar .fa-house {
+        font-size: 20px;
+        color: #6c757d;
+    }
+   
+
+    .d-flex.flex-column {
+        padding-left: 20px; /* Adjust this for desired left alignment */
+    }
+
+    h5 {
+        font-size: 16px;
+        margin-top: 0.25rem;
+    }
+
+/*Footer*********************************************************************************************************************************/
+    /* Footer */
+    .footer {
+        grid-area: footer;
+        background-color: #f0f2f5;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+/*Designs and Resolutions****************************************************************************************************************/
+    /* Responsive Design */
+    @media (max-width: 900px) {
+        .main {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            transform: translateX(-108%);
+            z-index: 1000; /* Add this to ensure it's in front of other content */
+        }
+
+        .sidebar.show {
+            transform: translateX(0);
+        }
+
+        .content {
+            margin-left: -7px;
+        }  
+    }
+
+     /* Responsive Design close fa-bars*/
+    @media (min-width: 900px) {
+        .hide-on-large {
+            display: none;
+        }
+    }
+
+
+    /* Responsive Design */
+    @media (max-width: 576px) { /* max-width: 576px */
+        .search{
+            margin-right: 70px; /* Add this to give space right for search input */
+        }
+    } 
+
+    .shadow-card{
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+        border: none;
+        border-radius: 13px;
+    } 
+    
+
+/*lcon toggle button********************************************************************************************************************************/
+    .dropdown-toggle::after {
+display: none;
+}
+.dropdown-item {
+color: #344767; /* Optional: Change text color to white for better contrast */
+}
+.dropdown-item:hover {
+background-color: rgb(130, 155, 189); /* Change background color on hover */
+color: white; /* Optional: Change text color to white for better contrast */
+}
+
+/*********************/
+.form-control:focus {
+    /*border-color: #1e90ff; pwedi mo namn lagyan ng kulay yung border*/ 
+    background-color: #fff; /* Ensures the background is white on focus */
+    box-shadow: none; /* Removes the default box-shadow on focus */
+    border-color: #ced4da;
+    outline: none;
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge, Opera) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Standard syntax (for browsers that support it) */
+}
+
+
+
+</style>
+
+<body>
+
+    <!-- Main Start -->
+    <div class="main">
+        <!-- Sidebar -->
+        <div class="sidebar shadow"><!--shadow -->
+            <p class="text-dark mt-3 text-center fw-bold fs-6">Super Chow</p>
+            <hr class="horizontal hr text-dark mt-0 mb-2">
+            <a href="adminDashboard" ><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+            <a href="/menu"><i class="fa-solid fa-table"></i> Menu</a>
+            <a href="/order"><i class="fa-solid fa-table"></i> Order</a>
+            <a href="/orderList"><i class="fa-solid fa-table"></i> Order List</a>
+            <a href="" class="active"><i class="fa-solid fa-table"></i> Product</a>
+        </div>
+
+        <!-- Overlay -->
+        <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+
+        <!-- Content -->
+        <div class="content" style="padding-right: 15px; padding-left: 15px;">
+            <div class="container-fluid px-3">
+                <div class="row">
+
+                    <!-- navbar -->
+                    <nav class="navbar navbar-expand-lg mb-4" style="margin-top: -40px;">
+                        <div class="container-fluid d-flex justify-content-between align-items-center" style="background-color: #f0f2f5;">
+                        <!-- Breadcrumb section -->
+                        <div class="d-flex flex-column align-items-start">
+                            <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item" style="text-decoration: none;">Pages</li>
+                                <li class="breadcrumb-item active" aria-current="page">Product</li>
+                            </ol>
+                            </nav>
+                            <h5 class="mb-0 fw-bolder">Product</h5>
+                        </div>
+
+                        <!-- Right section with search bar and icons -->
+                        <div class="d-flex align-items-center mt-3">
+                            <!-- Search input -->
+                            <form class="d-md-flex me-2 ms-3">
+                            <input class="form-control search form-control-sm" type="search" placeholder="Type here..." aria-label="Search">
+                            </form>
+
+                            <!-- Icons -->
+                            <a href="#" class="me-2 ms-1 zone">
+                                <i class="fa-solid fa-bars hide-on-large" onclick="toggleSidebar()"></i>
+                            </a>
+                            <a href="/adminDashboard" class="me-2 zone">
+                                <i class="fa-solid fa-house"></i>
+                            </a>
+                            <a href="#" class="me-0 zone">
+                                <i class="fas fa-bell"></i>
+                            </a>
+                            <!-- Dropdown Menu -->
+                            <div class="dropdown position-relative">
+                                <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border: none;">
+                                    <i class="fas fa-user"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item fw-bold disabled" href="#">Action:</a></li>
+                                    <li><a class="dropdown-item fw-bold btn-logout" href="#" id="logoutButton"><i class="fa-solid fa-arrow-right-from-bracket"></i>Logout</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        </div>
+                    </nav>
+
+
+                    <div class="container">
+                        <!-- Add Food Form -->
+                        <div class="add-item-form">
+                            <h4 style="margin-top: -20px;">FOOD MANAGEMENT</h4>
+                            <form action="/table" method="POST" enctype="multipart/form-data" class="p-3 border rounded shadow" >
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" name="name" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Price</label>
+                                    <input type="number" name="price" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="file" class="form-label">Image</label>
+                                    <input type="file" name="upload_image" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Add Food Item</button>
+                            </form>
+                        </div>
+                    </div>
+                
+                   <!-- If success is true in the query, show the SweetAlert success popup -->
+                  <% if (success === 'true') { %>
+                    <script>
+                      swal("Success!", "Food item added successfully.", "success")
+                      .then((value) => {
+                      // Redirect to product.ejs after clicking the "OK" button
+                      window.location.href = '/product';  // Adjust the URL based on your route
+                    });
+                                // Custom CSS for SweetAlert width and height
+                                const swalContainer = document.querySelector('.swal-modal');
+                                if (swalContainer) {
+                                    swalContainer.style.width = '302px';
+                                    swalContainer.style.height = '402px';
+                                };
+                                // Add margin-top to the SweetAlert icon
+                                const swalIcon = document.querySelector('.swal-icon');
+                                if (swalIcon) {
+                                    swalIcon.style.marginTop = '50px'; // Adjust margin-top to 20px (or as needed)
+                                }
+                    
+                                // Add margin-top to the text ("Food Updating Successfully")
+                                const swalText = document.querySelector('.swal-text');
+                                if (swalText) {
+                                    swalText.style.marginTop = '20px'; // Adjust the margin-top to your preference
+                                }
+                
+                                // Add margin to the SweetAlert buttons
+                                const swalButtons = document.querySelectorAll('.swal-button');
+                                swalButtons.forEach(btn => {
+                                    btn.style.margin = '10px';  // Add desired margin here (10px example)
+                                    btn.style.borderRadius = '32px'; // Add border-radius (rounded corners) to the button
+                                    btn.style.paddingLeft = '40px';  // Add padding-left of 20px
+                                    btn.style.paddingRight = '40px'; // Add padding-right of 20px
+                                    btn.style.paddingTop = '7px'; // Add padding-right of 20px
+                                    btn.style.paddingBottom = '7px'; // Add padding-right of 20px
+                                    btn.style.backgroundColor = '#2dd284'; // Set background color (green)
+                                    btn.style.color = 'white';  // Set text color (white)
+                                    btn.style.border = 'none';  // Remove default border if needed
+                
+                                    // Remove box-shadow and active border
+                                    btn.style.boxShadow = 'none';  // Remove box-shadow (no shadow effect)
+                                    btn.style.outline = 'none';  // Remove outline (active border when clicked)
+                                });
+                    
+                                // Center the SweetAlert button
+                                const swalButtonContainer = document.querySelector('.swal-button-container');
+                                if (swalButtonContainer) {
+                                    swalButtonContainer.style.display = 'flex';
+                                    swalButtonContainer.style.justifyContent = 'center'; // Centers button horizontally
+                                    swalButtonContainer.style.alignItems = 'center';   // Centers button vertically (if needed)
+                                }
+                    </script>
+                  <% } %>
+                
+
+<!-- Food List -->
+<div class="container my-5 mt-5">
+    <h4 style="margin-top: -20px;">FOOD LIST</h4>
+    <table id="orderTable" class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th style="width: 50px; text-align: center;">Image</th>
+                <th style="text-align: center;">Update Content</th>
+                <th style="width: 140px; text-align: center;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% foods.forEach(food => { %>
+            <tr>
+                <td style="text-align: center;">
+                    <img src="<%= food.image %>" class="img-thumbnail" alt="<%= food.name %>" style="width:60px;height:60px;">
+                </td>
+                <td>
+                    <form action="/editFood/<%= food._id %>" method="POST" enctype="multipart/form-data" id="updateForm-<%= food._id %>" class="d-flex align-items-center justify-content-center" style="margin-top: 15px;">
+                        <input type="text" class="form-control form-control-sm me-2" name="name" value="<%= food.name %>" required spellcheck="false">
+                        <input type="number" class="form-control form-control-sm me-2" name="price" value="<%= food.price %>" required>
+                        <input type="file" class="form-control form-control-sm me-2" name="upload_image">
+                    </form>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center" style="margin-top: 15px;">
+                        <form action="/updateFood/<%= food._id %>" method="POST" class="me-2" onclick="handleUpdate('<%= food._id %>')">
+                            <button type="button" class="btn btn-orange text-dark btn-sm" style="background: orange; border-radius: 4px;" onclick="handleUpdate('<%= food._id %>')" onclick="document.getElementById('updateForm-<%= food._id %>').submit();">
+                                <i class="fa fa-check"></i> Update
+                            </button>
+                        </form>
+                        <form action="/deleteFood/<%= food._id %>" method="POST">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+    
+       
+
+    </div>
+    <!-- Main End -->
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('show');
+            overlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
+        }
+
+        document.getElementById('logoutButton').addEventListener('click', function () {
+            // Show SweetAlert confirmation
+            swal({
+                title: "Warning!",
+                text: "Are you sure you want to logout?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willLogout) => {
+                if (willLogout) {
+                    // Redirect to the logout route
+                    window.location.href = '/logout';
+                }
+            });
+        });
+    </script>
+
+ <!-- Footer Start-->
+ <div class="footer" style="box-shadow: none;">
+    <p class="text-center justify-content-center">© 2024, by PrincePLS17.</p>
+</div>
+<!-- Footer End-->
+
+
+      <!-- hhhlchdlchlcldh-->
+      <script src="/js/sweetAlert.js" defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+
+       <!-- jQuery, Bootstrap JS, and DataTables scripts -->
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>-->
+   <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#orderTable').DataTable({
+            responsive: true,
+            pageLength: 5,
+            language: {
+                search: "Search:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+            },
+        });
+    });
+</script>
+
+<script>
+    function handleUpdate(foodId) {
+        // Show SweetAlert with success message
+        swal({
+            title: "Success!",
+            text: "Food update successfully.",
+            icon: "success",
+            button: "OK",  // Custom button text
+           
+        }).then(() => {
+            // Once SweetAlert disappears, submit the form
+            document.getElementById('updateForm-' + foodId).submit();
+        });
+
+        // Custom CSS for SweetAlert width and height
+        const swalContainer = document.querySelector('.swal-modal');
+                if (swalContainer) {
+                    swalContainer.style.width = '302px';
+                    swalContainer.style.height = '402px';
+                };
+                // Add margin-top to the SweetAlert icon
+                const swalIcon = document.querySelector('.swal-icon');
+                if (swalIcon) {
+                    swalIcon.style.marginTop = '50px'; // Adjust margin-top to 20px (or as needed)
+                }
+    
+                // Add margin-top to the text ("Food Updating Successfully")
+                const swalText = document.querySelector('.swal-text');
+                if (swalText) {
+                    swalText.style.marginTop = '20px'; // Adjust the margin-top to your preference
+                }
+
+                // Add margin to the SweetAlert buttons
+                const swalButtons = document.querySelectorAll('.swal-button');
+                swalButtons.forEach(btn => {
+                    btn.style.margin = '10px';  // Add desired margin here (10px example)
+                    btn.style.borderRadius = '32px'; // Add border-radius (rounded corners) to the button
+                    btn.style.paddingLeft = '40px';  // Add padding-left of 20px
+                    btn.style.paddingRight = '40px'; // Add padding-right of 20px
+                    btn.style.paddingTop = '7px'; // Add padding-right of 20px
+                    btn.style.paddingBottom = '7px'; // Add padding-right of 20px
+                    btn.style.backgroundColor = '#2dd284'; // Set background color (green)
+                    btn.style.color = 'white';  // Set text color (white)
+                    btn.style.border = 'none';  // Remove default border if needed
+
+                    // Remove box-shadow and active border
+                    btn.style.boxShadow = 'none';  // Remove box-shadow (no shadow effect)
+                    btn.style.outline = 'none';  // Remove outline (active border when clicked)
+                });
+    
+                // Center the SweetAlert button
+                const swalButtonContainer = document.querySelector('.swal-button-container');
+                if (swalButtonContainer) {
+                    swalButtonContainer.style.display = 'flex';
+                    swalButtonContainer.style.justifyContent = 'center'; // Centers button horizontally
+                    swalButtonContainer.style.alignItems = 'center';   // Centers button vertically (if needed)
+                }
+    }
+</script>
+  
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('show');
+            overlay.style.display = sidebar.classList.contains('show') ? 'block' : 'none';
+        }
+    </script>
+
+
+</body>
+</html>

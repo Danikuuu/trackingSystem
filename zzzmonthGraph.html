@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Overview Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .chart-container {
+            width: 50%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .chart-header {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .chart-subtext {
+            color: green;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chart-container">
+    <div class="chart-header">Sales overview</div>
+    <div class="chart-subtext">⬆ 4% more in 2021</div>
+    <canvas id="salesChart"></canvas>
+</div>
+
+<script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const gradient1 = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient1.addColorStop(0, 'rgba(255, 0, 255, 0.3)'); // Pink color
+    gradient1.addColorStop(0.9, 'rgba(255, 0, 255, 0)');
+
+    const gradient2 = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient2.addColorStop(0, 'rgba(0, 0, 128, 0.3)'); // Blue color
+    gradient2.addColorStop(0.9, 'rgba(0, 0, 128, 0)');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [
+                {
+                    label: 'Dataset 1',
+                    data: [50, 100, 200, 300, 250, 220, 280, 200, 300],
+                    borderColor: '#FF00FF', // Pink line
+                    backgroundColor: gradient1,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Dataset 2',
+                    data: [70, 90, 150, 280, 230, 250, 230, 280, 350],
+                    borderColor: '#000080', // Blue line
+                    backgroundColor: gradient2,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false // Hide legend for simplicity
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 500
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

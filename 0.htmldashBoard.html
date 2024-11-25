@@ -1,0 +1,92 @@
+const Order = require('../models/Order'); // Adjust the path as necessary
+const Menu = require('../models/Menu'); // Import Menu model to get the total food count
+
+// Get the analytic 
+exports.getOrderAnalytics = async (req, res) => {
+  try {
+    // Calculate total number of orders
+    const totalOrders = await Order.countDocuments();
+
+    // Calculate total revenue from orders
+    const totalRevenue = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$totalPrice" }
+        }
+      }
+    ]);
+
+    // Find the most popular food items by counting occurrences
+    const popularItems = await Order.aggregate([
+      {
+        $group: {
+          _id: "$foodName",
+          totalQuantity: { $sum: "$quantity" }
+        }
+      },
+      {
+        $sort: { totalQuantity: -1 } // Sort by total quantity in descending order
+      },
+      {
+        $limit: 3 // Limit to top 3 items
+      }
+    ]);
+
+    // Get total food items from Menu collection
+    const totalFoodItems = await Menu.countDocuments();
+
+    res.render('adminDashboard', {
+      totalOrders,
+      totalRevenue: totalRevenue[0] ? totalRevenue[0].totalRevenue : 0,
+      popularItems,
+      totalFoodItems
+    });
+  } catch (error) {
+    console.error("Error calculating order analytics:", error);
+    res.status(500).send("Server error while fetching analytics.");
+  }
+};
+Step 2: Update menu.ejs to Display Total Food Items
+In menu.ejs, you can now display totalFoodItems using EJS syntax. Here’s an example:
+
+html
+Copy code
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Menu</h1>
+
+        <!-- Display total food items -->
+        <div class="text-center mb-4">
+            <h4>Total Food Items Available: <%= totalFoodItems %></h4>
+        </div>
+
+        <!-- Your existing menu display code here -->
+        <div class="row">
+            <!-- Example loop through menu items -->
+            <% menuItems.forEach(item => { %>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="<%= item.image %>" class="card-img-top" alt="<%= item.name %>">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= item.name %></h5>
+                            <p class="card-text">₱<%= item.price.toFixed(2) %></p>
+                            <button class="btn btn-primary">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+</html>
