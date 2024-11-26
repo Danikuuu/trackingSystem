@@ -1,0 +1,54 @@
+[{
+  "_id": {
+    "$oid": "67317477b0ee72286669c440"
+  },
+  "name": "sizzling beef",
+  "price": 105,
+  "image": "/uploads/1731563867048.png",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67317809b0ee72286669c462"
+  },
+  "name": "sizzling pusit",
+  "price": 105,
+  "image": "/uploads/1731563905849.png",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6731df094c80a5443131068c"
+  },
+  "name": "sizzling sisig",
+  "price": 105,
+  "image": "/uploads/1731564055740.png",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67358c89582d524a9e690977"
+  },
+  "name": "chicksilog",
+  "price": 105,
+  "image": "/uploads/1731564135127.png",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67389d51b151499728cf0901"
+  },
+  "name": "Aizel",
+  "price": 1,
+  "image": "/uploads/1731763537814.png",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "673bf86d27e16f633462dceb"
+  },
+  "name": "Rice",
+  "price": 20,
+  "image": "/uploads/1731983469543.png",
+  "__v": 0
+}]
