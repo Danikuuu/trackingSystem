@@ -1,5 +1,5 @@
 {
-  "name": "trackingordersystem",
+  "name": "trackingsystem",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.20.3",
     "chart.js": "^4.4.6",
+    "connect-mongodb-session": "^5.0.0",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "ejs": "^3.1.10",
